@@ -1,4 +1,5 @@
 # main.py
+from typing import List
 
 import uvicorn
 from fastapi import FastAPI
@@ -7,9 +8,22 @@ from fastapi import FastAPI
 
 from Types import Song
 from db import remove, upsert, get, create_params, query
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+origins = [
+    "http://localhost",
+    "http://localhost:80",
+    "http://localhost:8080",
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/helloWorld")
 async def hello_world():
@@ -32,12 +46,12 @@ async def delete_song(id: str):
 
 
 @app.get("/song/list")
-async def list_songs() -> list[Song]:
-    return query('SELECT * FROM joy WHERE type == "song"').rows()
+async def list_songs() -> List[Song]:
+    return query('SELECT j.* FROM joy j WHERE j.type == "song"').rows()
 
 
 @app.get("/song/filter")
-async def list_songs_filter(author: str = "") -> list[Song]:
+async def list_songs_filter(author: str = "") -> List[Song]:
     p = create_params()
     return query(f'SELECT * FROM joy WHERE type == "song" AND `doc`.`author` LIKE {p(f"%{author}%")}', p).rows()
 
