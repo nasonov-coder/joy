@@ -6,6 +6,7 @@ class Song(BaseModel):
     name: str
     composer: Optional[str]
     author_text: Optional[str]
+    genry: Optional[str]
     links: List[str]
     seasons: List[str]
     choirs: List[str]
