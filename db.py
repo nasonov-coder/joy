@@ -28,7 +28,7 @@ def remove(type: str, id: str):
 
 
 def get(type: str, id: str):
-    collection.get(f'{type}@{id}')
+    return collection.get(f'{type}@{id}')
 
 
 class Params:
